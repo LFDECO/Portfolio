@@ -1,0 +1,533 @@
+<!doctype html>
+<!--
+  
+-->
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <meta name="theme-color" content="#0e1013">
+  <title>Siddhartha Bhaduri — Software &amp; Machine Learning</title>
+  <meta name="description"
+    content="Siddhartha Bhaduri, computer science undergraduate at SRM University and AI research intern at CSIR–CSIO working on software, machine learning, and NDT terahertz computer vision.">
+  <link rel="icon" type="image/svg+xml"
+    href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='1' y='1' width='30' height='30' rx='6' fill='%2315181d' stroke='%23ea9264' stroke-opacity='0.6' stroke-width='1.5'/%3E%3Ctext x='16' y='21.5' text-anchor='middle' font-family='monospace' font-size='14' font-weight='500' fill='%23eeece6'%3ESB%3C/text%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="styles.css?v=3">
+</head>
+
+<body>
+  <header class="site-header">
+    <div class="wrap header-row">
+      <a class="wordmark" href="#top">Siddhartha Bhaduri</a>
+      <nav class="nav" aria-label="Primary">
+        <a href="#about">About</a>
+        <a href="#research">Research</a>
+        <a href="#projects">Projects</a>
+        <a href="#record">Record</a>
+        <a href="https://github.com/LFDECO" target="_blank" rel="noopener">GitHub</a>
+        <a class="btn btn-quiet" href="mailto:sbhaduri2910@gmail.com">Email me</a>
+      </nav>
+      <details class="menu">
+        <summary aria-label="Menu">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M4 7h16M4 12h16M4 17h16" />
+          </svg>
+        </summary>
+        <div class="menu-panel">
+          <a href="#about">About</a>
+          <a href="#research">Research</a>
+          <a href="#projects">Projects</a>
+          <a href="#record">Record</a>
+          <a href="https://github.com/LFDECO" target="_blank" rel="noopener">GitHub</a>
+          <a href="mailto:sbhaduri2910@gmail.com">Email me</a>
+        </div>
+      </details>
+    </div>
+  </header>
+
+  <main id="top">
+    <!-- Hero -->
+    <section class="hero wrap">
+      <div class="hero-text">
+        <p class="meta hero-eyebrow" data-reveal>Computer Science Undergraduate · SRM University · Chennai</p>
+        <div class="hero-identity">
+          <h1 class="hero-name" data-reveal><span class="pull-up-mask"><span class="pull-up-line">Siddhartha
+                Bhaduri</span></span></h1>
+        </div>
+        <p class="lede" data-reveal>
+          I build software and machine learning models, with a strong interest in computer vision.
+          I am currently working on a computer vision problem in non-destructive testing (NDT)
+          terahertz imaging.
+        </p>
+        <div class="actions">
+          <a class="btn btn-primary" href="#about" data-reveal>About me<svg class="icon icon-sm icon-down"
+              viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M12 5v14M6 13l6 6 6-6" />
+            </svg></a>
+          <a class="btn btn-secondary" href="#research" data-reveal>Explore research<svg class="icon icon-sm icon-down"
+              viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M12 5v14M6 13l6 6 6-6" />
+            </svg></a>
+          <a class="btn btn-secondary" href="assets/Siddhartha_Bhaduri_Resume.pdf" target="_blank" rel="noopener"
+            data-reveal>Résumé (PDF)</a>
+        </div>
+      </div>
+
+      <figure class="hero-stage" id="hero-3d-wrap" data-reveal aria-label="Interactive 3D computational sculpture">
+        <div class="stage-top">
+          <div class="segmented" role="group" aria-label="Sculpture view modes">
+            <button type="button" data-hero-mode="orbit" aria-selected="true">Sculpture</button>
+            <button type="button" data-hero-mode="explode" aria-selected="false">Layers</button>
+            <button type="button" data-hero-mode="reset">Reset</button>
+          </div>
+          <span class="readout mono" id="hero-readout" aria-live="polite">Interactive 3D · drag to orbit</span>
+        </div>
+        <div class="stage-frame">
+          <div id="hero-3d" class="stage-canvas" aria-label="Interactive 3D computational sculpture"></div>
+        </div>
+        <figcaption>
+          <span class="mono">Artifact 01</span>
+          Layered 3D lattice modeling non-visible spectral and terahertz imaging. Drag to orbit or
+          switch to Layers to separate the internal shells.
+        </figcaption>
+      </figure>
+    </section>
+
+    <!-- About -->
+    <section id="about" class="section wrap">
+      <div class="section-head" data-reveal>
+        <h2>About</h2>
+        <p class="section-note">Background &amp; current work</p>
+      </div>
+
+      <div class="about-grid">
+        <div class="about-narrative">
+          <p class="about-lead" data-reveal>
+            I’m a Computer Science student at SRM University in Chennai (9.22 CGPA, graduating
+            2028), focused on computer vision and software engineering.
+          </p>
+          <p data-reveal>
+            I’m currently an AI Research Intern at CSIR–CSIO, using terahertz imaging to spot
+            hidden defects inside 3D-printed parts without damaging them. At university, I’m also
+            writing a paper on adapting standard vision models to work with multi-band satellite
+            photos.
+          </p>
+          <p data-reveal>
+            Outside of research, I solve algorithm problems on LeetCode (Knight, 1870 peak rating,
+            300+ solved) and build web apps and backend services in Python and TypeScript.
+          </p>
+        </div>
+
+        <aside class="about-highlights" aria-label="Key milestones" data-reveal>
+          <dl class="figures figures-compact">
+            <div>
+              <dt>Degree</dt>
+              <dd>B.Tech CS · SRM University</dd>
+            </div>
+            <div>
+              <dt>Academic standing</dt>
+              <dd>9.22 <small>/ 10.0 CGPA</small></dd>
+            </div>
+            <div>
+              <dt>Research internship</dt>
+              <dd>CSIR–CSIO <small>Oct 2026 – present</small></dd>
+            </div>
+            <div>
+              <dt>Paper</dt>
+              <dd>SpectralAdapter <small>in prep.</small></dd>
+            </div>
+            <div>
+              <dt>Competitive rating</dt>
+              <dd>1870 <small>LeetCode Knight · top ~5%</small></dd>
+            </div>
+          </dl>
+        </aside>
+      </div>
+
+      <div class="focus-ledger" role="list" aria-label="Areas of work">
+        <div class="focus-row" role="listitem" data-reveal>
+          <span class="focus-domain">Computer vision</span>
+          <p class="focus-desc">
+            Finding hidden internal flaws in 3D-printed parts using terahertz scans.
+          </p>
+          <span class="focus-meta mono">CSIR–CSIO</span>
+        </div>
+        <div class="focus-row" role="listitem" data-reveal>
+          <span class="focus-domain">Satellite imagery</span>
+          <p class="focus-desc">
+            Adapting standard image models to understand 13-band satellite photos.
+          </p>
+          <span class="focus-meta mono">SRM · Research</span>
+        </div>
+        <div class="focus-row" role="listitem" data-reveal>
+          <span class="focus-domain">Software systems</span>
+          <p class="focus-desc">
+            Building document search tools, fraud-detection APIs, and full-stack web apps.
+          </p>
+          <span class="focus-meta mono">Python · TypeScript</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Recent Activity (shown only when updates exist within the last 24 hours) -->
+    <section id="activity" class="section section-compact wrap" hidden aria-live="polite">
+      <div class="section-head" data-reveal>
+        <h2>Recent activity</h2>
+        <p class="section-note mono" id="activity-window-note">Last 24 hours</p>
+      </div>
+      <ul class="activity-list" id="activity-list"></ul>
+    </section>
+
+    <!-- Research -->
+    <section id="research" class="section wrap">
+      <div class="section-head" data-reveal>
+        <h2>Research</h2>
+        <p class="section-note">Two imaging problems where RGB models don’t transfer directly</p>
+      </div>
+
+      <article class="entry" data-reveal>
+        <div class="entry-side">
+          <p class="mono date">Oct 2026 – present</p>
+          <p class="org">CSIR – Central Scientific Instruments Organisation (CSIO)</p>
+        </div>
+        <div class="entry-body">
+          <h3>Terahertz imaging for non-destructive evaluation</h3>
+          <p class="role">AI Research Intern – Terahertz (THz) Imaging &amp; Computer Vision</p>
+          <p>
+            Developing a decoupled multi-stage AI pipeline that finds subsurface defects in FDM
+            3D-printed polymers from single-pixel raster THz reflection scans at 350 GHz and 500 GHz,
+            46 × 46 px at 1 mm per pixel resolution.
+          </p>
+
+          <figure class="scan thz-figure" id="thz-figure"
+            aria-label="Interactive 3D polymer specimen and simulated terahertz raster scan">
+            <div class="scan-top">
+              <div class="segmented" role="tablist" aria-label="Terahertz visualization mode">
+                <button type="button" role="tab" data-band="3d-specimen" aria-selected="true">3D Specimen</button>
+                <button type="button" role="tab" data-band="3d-relief" aria-selected="false">3D Relief</button>
+                <button type="button" role="tab" data-band="350" aria-selected="false">350 GHz</button>
+                <button type="button" role="tab" data-band="500" aria-selected="false">500 GHz</button>
+                <button type="button" role="tab" data-band="fused" aria-selected="false">Fused 2D</button>
+              </div>
+              <span class="readout mono" id="readout" aria-live="off">46 × 46 × 6 mm · 2 voids</span>
+            </div>
+            <div class="scan-frame thz-stage">
+              <div id="thz-3d" class="stage-canvas thz-3d-layer" aria-label="Interactive 3D terahertz polymer specimen">
+              </div>
+              <canvas id="scan" width="460" height="460" hidden></canvas>
+              <div class="scale-bar" aria-hidden="true" hidden><span></span>10 mm</div>
+            </div>
+            <figcaption>
+              <span class="mono">Fig. 1</span>
+              Interactive 3D model and simulated reflection scan of a 46 × 46 mm FDM polymer print
+              with 45° rectilinear infill and two subsurface voids. Switch between 3D Specimen,
+              3D Relief, and 2D band slices (350 GHz, 500 GHz, Fused 2D). Illustrative, not measured data.
+            </figcaption>
+          </figure>
+
+          <dl class="figures">
+            <div>
+              <dt>AUROC</dt>
+              <dd>0.992</dd>
+            </div>
+            <div>
+              <dt>Average precision</dt>
+              <dd>1.00</dd>
+            </div>
+            <div>
+              <dt>Localization error</dt>
+              <dd>1.0 <small>mm</small></dd>
+            </div>
+            <div>
+              <dt>Defect CNR</dt>
+              <dd>5.3 <span class="arrow">→</span> 8.2</dd>
+            </div>
+          </dl>
+          <ul class="points">
+            <li>Physics-aware preprocessing and dual-frequency fusion: edge-artifact masking, cross-band registration
+              and interior-median scale normalization</li>
+            <li>Leave-one-scan-out benchmark of blind-defect segmentation across U-Net, XGBoost and unsupervised
+              patch-memory anomaly detectors, with 1.0 mm localization under a 3–4 mm beam diffraction limit</li>
+            <li>Adapting DeepLabV3+ to low-resolution THz grids with output stride 8, compact ASPP dilation rates (1, 2,
+              4), Focal + Dice loss and beam-deconvolution post-processing, plus dual-band ratio features for material
+              and infill classification</li>
+          </ul>
+          <p class="stack">PyTorch, SciPy, XGBoost, DeepLabV3+</p>
+        </div>
+      </article>
+
+      <article class="entry" data-reveal>
+        <div class="entry-side">
+          <p class="mono date">2026 – present</p>
+          <p class="org">SRM University</p>
+        </div>
+        <div class="entry-body">
+          <h3>SpectralAdapter: parameter-efficient transfer to multispectral imagery</h3>
+          <p class="role">Undergraduate Researcher · IIT conference manuscript in preparation</p>
+          <p>
+            Adapts a 99.91% frozen ImageNet ResNet-50 backbone to 13-band Sentinel-2 satellite
+            imagery through a 45-parameter 1×1 spectral projection head.
+          </p>
+
+          <div class="spectral-showcase" id="spectral-wrap">
+            <div class="stage-top">
+              <span class="mono stage-label">Spectral projection</span>
+              <span class="readout mono" id="spectral-readout" aria-live="polite">13 bands (443–2190 nm) → 1×1 conv (45
+                params) → 3 ch</span>
+            </div>
+            <div class="stage-frame spectral-frame">
+              <div id="spectral-3d" class="stage-canvas spectral-canvas"
+                aria-label="Interactive 3D Sentinel-2 13-band projection into frozen ResNet-50"></div>
+            </div>
+            <div class="spectral"
+              aria-label="Interactive diagram: 13 Sentinel-2 bands projected to 3 channels for a frozen ResNet-50">
+              <ol class="bands mono" aria-label="Sentinel-2 spectral bands">
+                <li data-band-index="0" data-band="B1" data-nm="443" tabindex="0">B1<span>443</span></li>
+                <li data-band-index="1" data-band="B2" data-nm="490" tabindex="0">B2<span>490</span></li>
+                <li data-band-index="2" data-band="B3" data-nm="560" tabindex="0">B3<span>560</span></li>
+                <li data-band-index="3" data-band="B4" data-nm="665" tabindex="0">B4<span>665</span></li>
+                <li data-band-index="4" data-band="B5" data-nm="705" tabindex="0">B5<span>705</span></li>
+                <li data-band-index="5" data-band="B6" data-nm="740" tabindex="0">B6<span>740</span></li>
+                <li data-band-index="6" data-band="B7" data-nm="783" tabindex="0">B7<span>783</span></li>
+                <li data-band-index="7" data-band="B8" data-nm="842" tabindex="0">B8<span>842</span></li>
+                <li data-band-index="8" data-band="B8A" data-nm="865" tabindex="0">B8A<span>865</span></li>
+                <li data-band-index="9" data-band="B9" data-nm="945" tabindex="0">B9<span>945</span></li>
+                <li data-band-index="10" data-band="B10" data-nm="1375" tabindex="0">B10<span>1375</span></li>
+                <li data-band-index="11" data-band="B11" data-nm="1610" tabindex="0">B11<span>1610</span></li>
+                <li data-band-index="12" data-band="B12" data-nm="2190" tabindex="0">B12<span>2190</span></li>
+              </ol>
+              <div class="flow mono">
+                <span>13 bands, nm</span>
+                <span class="flow-step is-accent">1×1 projection · 45 params</span>
+                <span class="flow-step">3 channels</span>
+                <span class="flow-step">ResNet-50, frozen</span>
+              </div>
+            </div>
+          </div>
+
+          <dl class="figures">
+            <div>
+              <dt>Top-1 accuracy</dt>
+              <dd>96.54<small>%</small></dd>
+            </div>
+            <div>
+              <dt>Macro F1</dt>
+              <dd>96.40<small>%</small></dd>
+            </div>
+            <div>
+              <dt>Trainable parameters</dt>
+              <dd>20,535</dd>
+            </div>
+            <div>
+              <dt>vs. full fine-tuning</dt>
+              <dd>1,145× <small>fewer</small></dd>
+            </div>
+          </dl>
+          <ul class="points">
+            <li>RGB-prior initialization and identity activation, so non-visible bands keep negative reflectance values
+              instead of being truncated</li>
+            <li>BatchNorm evaluation-mode overrides and affine ImageNet rescaling buffers prevent catastrophic domain
+              shift, from a 5.74% F1 baseline</li>
+            <li>Evaluated on 17,000 EuroSAT test samples</li>
+          </ul>
+          <p class="stack">
+            PyTorch, ResNet-50, Sentinel-2 ·
+            <a class="link" href="https://github.com/LFDECO/hyperspectral_domain_adaptors" target="_blank"
+              rel="noopener">Code on GitHub<svg class="icon icon-sm" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M7 17 17 7M8 7h9v9" />
+              </svg></a>
+          </p>
+        </div>
+      </article>
+    </section>
+
+    <!-- Projects -->
+    <section id="projects" class="section wrap">
+      <div class="section-head" data-reveal>
+        <h2>Projects</h2>
+      </div>
+
+      <ul class="projects">
+        <li class="project" data-reveal>
+          <div class="project-head">
+            <h3>RAG From Scratch</h3>
+            <span class="mono date">2026 – present</span>
+          </div>
+          <p class="role">Retrieval engine and benchmark harness · Independent</p>
+          <p>
+            End-to-end retrieval-augmented generation from first principles: boundary-aware
+            sliding-window chunking and a pure-NumPy vectorized cosine-similarity store over
+            384-dimensional embeddings. Enforces strict zero-hallucination context grounding, with a
+            harness benchmarking retrieval latency, indexing overhead and semantic precision against
+            LangChain abstractions.
+          </p>
+          <p class="stack">Python, NumPy, SentenceTransformers, pypdf, LangChain</p>
+        </li>
+
+        <li class="project" data-reveal>
+          <div class="project-head">
+            <h3>TRIDENT</h3>
+            <span class="mono date">2026</span>
+          </div>
+          <p class="role">Automated email fraud detection · Co-creator</p>
+          <p>
+            Automated IMAP ingestion feeding an XGBoost classifier on lexical, header and
+            domain-reputation features to flag phishing and spoofed payloads.
+            Sender–recipient–URL interaction graphs in NetworkX surface cross-email attack patterns,
+            served as sub-second threat scoring endpoints through FastAPI.
+          </p>
+          <p class="stack">
+            Python, XGBoost, IMAP, FastAPI, NetworkX ·
+            <a class="link" href="https://github.com/maurya-aryan/Trident-AI-Fraud-Detection-Engine" target="_blank"
+              rel="noopener">GitHub<svg class="icon icon-sm" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M7 17 17 7M8 7h9v9" />
+              </svg></a>
+          </p>
+        </li>
+
+        <li class="project" data-reveal>
+          <div class="project-head">
+            <h3>Portfolio.Ai</h3>
+            <span class="mono date">2026</span>
+          </div>
+          <p class="role">Stock brokerage and market simulator · Full-stack developer</p>
+          <p>
+            Full-stack paper-trading platform with real-time market streaming, order execution and
+            normalized MySQL position tracking, type-safe end to end through tRPC and
+            Drizzle ORM pipelines.
+          </p>
+          <p class="stack">
+            TypeScript, React 19, Node.js, tRPC, MySQL, Drizzle ORM ·
+            <a class="link" href="https://github.com/LFDECO/investment-portfolio-system" target="_blank"
+              rel="noopener">GitHub<svg class="icon icon-sm" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M7 17 17 7M8 7h9v9" />
+              </svg></a>
+          </p>
+        </li>
+      </ul>
+    </section>
+
+    <!-- Record -->
+    <section id="record" class="section wrap">
+      <div class="section-head" data-reveal>
+        <h2>Record</h2>
+      </div>
+
+      <div class="record-grid">
+        <div class="record-block" data-reveal>
+          <h3>Competitive programming</h3>
+          <dl class="figures figures-compact">
+            <div>
+              <dt>LeetCode peak rating</dt>
+              <dd>1870</dd>
+            </div>
+            <div>
+              <dt>Problems solved</dt>
+              <dd>300+</dd>
+            </div>
+            <div>
+              <dt>Biweekly contest rank</dt>
+              <dd>614 <small>of 40,000+</small></dd>
+            </div>
+          </dl>
+          <p class="note">LeetCode Knight, top ~5% globally ·
+            <a class="link" href="https://leetcode.com/u/LFDECO/" target="_blank" rel="noopener">Profile<svg
+                class="icon icon-sm" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M7 17 17 7M8 7h9v9" />
+              </svg></a>
+          </p>
+        </div>
+
+        <div class="record-block" data-reveal>
+          <h3>Education</h3>
+          <dl class="figures figures-compact">
+            <div>
+              <dt>CGPA</dt>
+              <dd>9.22 <small>/ 10</small></dd>
+            </div>
+            <div>
+              <dt>Graduation</dt>
+              <dd>2028 <small>expected</small></dd>
+            </div>
+          </dl>
+          <p class="note">B.Tech in Computer Science, SRM University, Chennai</p>
+        </div>
+
+        <div class="record-block" data-reveal>
+          <h3>Certifications</h3>
+          <ul class="list">
+            <li><a class="link" href="https://www.credly.com/badges/df2a37eb-a173-42e3-963b-d245d49508b8/public_url"
+                target="_blank" rel="noopener">AWS Certified AI Practitioner<svg class="icon icon-sm"
+                  viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M7 17 17 7M8 7h9v9" />
+                </svg></a></li>
+            <li><a class="link" href="https://www.credly.com/badges/02f4d83d-d61f-4252-b478-f62e7b10a2cf/public_url"
+                target="_blank" rel="noopener">AWS Certified Cloud Practitioner<svg class="icon icon-sm"
+                  viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M7 17 17 7M8 7h9v9" />
+                </svg></a></li>
+            <li>NPTEL Elite, Programming in Java</li>
+            <li>NPTEL Elite, DBMS</li>
+          </ul>
+        </div>
+      </div>
+
+      <dl class="skills" data-reveal>
+        <div>
+          <dt>Languages</dt>
+          <dd>Python, C++, Java, SQL, TypeScript, JavaScript</dd>
+        </div>
+        <div>
+          <dt>ML &amp; computer vision</dt>
+          <dd>PyTorch, Torchvision, DeepLabV3+, U-Net, XGBoost, scikit-learn, SciPy, NumPy, Pandas,
+            SentenceTransformers, LangChain</dd>
+        </div>
+        <div>
+          <dt>Systems &amp; infrastructure</dt>
+          <dd>FastAPI, React 19, Node.js, tRPC, Drizzle ORM, AWS, MySQL, Docker, Git, Linux</dd>
+        </div>
+        <div>
+          <dt>Spoken</dt>
+          <dd>English (professional), Hindi (native)</dd>
+        </div>
+      </dl>
+    </section>
+
+    <!-- Contact -->
+    <section id="contact" class="section wrap contact">
+      <h2 data-reveal>Contact</h2>
+      <p class="contact-line" data-reveal>
+        <a class="contact-mail" href="mailto:sbhaduri2910@gmail.com">sbhaduri2910@gmail.com</a>
+      </p>
+      <p class="note" data-reveal>Chennai, India ·
+        <a class="link" href="https://github.com/LFDECO" target="_blank" rel="noopener">GitHub</a> ·
+        <a class="link" href="https://leetcode.com/u/LFDECO/" target="_blank" rel="noopener">LeetCode</a> ·
+        <a class="link" href="https://www.linkedin.com/in/siddhartha-bhaduri-6468142ab/" target="_blank"
+          rel="noopener">LinkedIn</a> ·
+        <a class="link" href="assets/Siddhartha_Bhaduri_Resume.pdf" target="_blank" rel="noopener">Résumé (PDF)</a>
+      </p>
+    </section>
+  </main>
+
+  <button type="button" class="scroll-top-btn mono" id="scroll-top" aria-label="Scroll back to top" aria-hidden="true"
+    tabindex="-1"><svg class="icon icon-sm icon-up" viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M12 19V5M6 11l6-6 6 6" />
+    </svg><span>Top</span></button>
+
+  <footer class="site-footer wrap">
+    <span>© 2026 Siddhartha Bhaduri</span>
+  </footer>
+
+  <script src="script.js?v=3"></script>
+  <script type="module" src="js/scene-hero.js"></script>
+  <script type="module" src="js/scene-research.js"></script>
+</body>
+
+</html>
