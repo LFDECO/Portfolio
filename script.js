@@ -272,10 +272,9 @@
     selectMode(activeMode, { emit: false });
   }
 
-  // 3. Granular staggered pull-up reveal system
+  // 3. Granular staggered pull-up / bidirectional reveal system
   const hasReveal = !reduceMotion && typeof IntersectionObserver === "function";
   const REVEAL_PARENTS_TO_UNWRAP = [
-    ".section-head",
     "article.entry",
     ".about-highlights",
     ".skills",
@@ -286,13 +285,12 @@
     ".hero .lede",
     ".hero .actions > .btn",
     "#hero-3d-wrap",
-    ".section-head > *",
+    ".section-head",
     ".about-narrative > p",
     ".about-highlights .figures-compact > div",
     ".focus-row",
     ".entry-side > *",
-    ".entry-body > h3",
-    ".entry-body > .role",
+    ".entry-head",
     ".entry-body > p",
     ".entry-body > figure",
     ".entry-body > .spectral-showcase",
@@ -330,43 +328,81 @@
   const revealNodes = [...document.querySelectorAll("[data-reveal]")].filter(
     el => !el.closest("[hidden]")
   );
-  const pendingReveal = [];
   let revealObserver = null;
+  let resetObserver = null;
+  let heroTweenLock = false;
+  let initialCascadePending = false;
+  const initialVisibleSet = new Set();
+  let lastScrollY = window.scrollY;
+  let scrollDirection = "down";
 
   const revealElement = (el, delayMs = 0) => {
     if (!el || el.classList.contains("is-revealed")) return;
     el.style.setProperty("--reveal-delay", `${delayMs}ms`);
     el.classList.add("is-revealed");
-    if (revealObserver) revealObserver.unobserve(el);
+  };
+
+  const observeRevealNode = el => {
+    if (revealObserver) revealObserver.observe(el);
+    if (resetObserver) resetObserver.observe(el);
   };
 
   if (hasReveal) {
     document.documentElement.classList.add("has-reveal");
 
     revealObserver = new IntersectionObserver((entries) => {
-      let batchIdx = 0;
-      entries.forEach(entry => {
-        if (!entry.isIntersecting) return;
-        const delay = Math.min(batchIdx, 10) * 60;
-        revealElement(entry.target, delay);
-        batchIdx++;
+      const entering = entries.filter(entry => {
+        if (!entry.isIntersecting) return false;
+        const el = entry.target;
+        if (el.closest("[hidden]")) return false;
+        if (heroTweenLock && el.closest(".hero")) return false;
+        if (initialCascadePending && initialVisibleSet.has(el)) return false;
+        return !el.classList.contains("is-revealed");
       });
-    }, { threshold: 0.08, rootMargin: "0px 0px -24px 0px" });
+      if (!entering.length) return;
+
+      if (scrollDirection === "up") entering.reverse();
+      entering.forEach((entry, idx) => {
+        revealElement(entry.target, Math.min(idx, 8) * 85);
+      });
+    }, { threshold: 0.05, rootMargin: "0px 0px -12px 0px" });
+
+    resetObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) return;
+        const el = entry.target;
+        if (el.closest("[hidden]")) return;
+        if (initialCascadePending && initialVisibleSet.has(el)) return;
+
+        const rect = entry.boundingClientRect;
+        el.style.setProperty("--reveal-delay", "0ms");
+        if (rect.bottom <= 0) {
+          el.setAttribute("data-reveal-from", "top");
+        } else {
+          el.setAttribute("data-reveal-from", "bottom");
+        }
+        el.classList.remove("is-revealed");
+      });
+    }, { threshold: 0, rootMargin: "48px 0px 48px 0px" });
 
     const initialVisible = [];
     revealNodes.forEach(el => {
       const rect = el.getBoundingClientRect();
-      if (rect.bottom <= 0) {
-        revealElement(el, 0);
+      if (rect.bottom <= -24) {
+        el.setAttribute("data-reveal-from", "top");
       } else if (rect.top < window.innerHeight) {
+        el.setAttribute("data-reveal-from", "bottom");
         initialVisible.push(el);
+        initialVisibleSet.add(el);
       } else {
-        pendingReveal.push(el);
+        el.setAttribute("data-reveal-from", "bottom");
       }
+      observeRevealNode(el);
     });
 
-    // Prioritize hero name first so it pulls up immediately on load, then cascade one by one
+    // Prioritize hero name first so it pulls up immediately on load, then cascade gracefully
     if (initialVisible.length) {
+      initialCascadePending = true;
       const heroNameEl = initialVisible.find(el => el.classList.contains("hero-name"));
       const orderedInitial = heroNameEl
         ? [heroNameEl, ...initialVisible.filter(el => el !== heroNameEl)]
@@ -375,13 +411,13 @@
       requestAnimationFrame(() => {
         requestAnimationFrame(() => {
           orderedInitial.forEach((el, idx) => {
-            revealElement(el, Math.min(idx, 12) * 65);
+            revealElement(el, Math.min(idx, 10) * 90);
           });
+          initialCascadePending = false;
+          initialVisibleSet.clear();
         });
       });
     }
-
-    pendingReveal.forEach(el => revealObserver.observe(el));
 
     if (typeof reduceMotionQuery.addEventListener === "function") {
       reduceMotionQuery.addEventListener("change", () => {
@@ -392,21 +428,6 @@
     }
   } else {
     revealNodes.forEach(el => el.classList.add("is-revealed"));
-  }
-
-  function revealPassedAboveViewport() {
-    for (let i = pendingReveal.length - 1; i >= 0; i--) {
-      const el = pendingReveal[i];
-      if (el.classList.contains("is-revealed")) {
-        pendingReveal.splice(i, 1);
-        continue;
-      }
-      if (el.closest("[hidden]")) continue;
-      if (el.getBoundingClientRect().bottom <= 0) {
-        revealElement(el, 0);
-        pendingReveal.splice(i, 1);
-      }
-    }
   }
 
   function registerDynamicReveals(container) {
@@ -423,34 +444,34 @@
     const immediate = [];
     dynamicNodes.forEach(el => {
       const rect = el.getBoundingClientRect();
-      if (rect.bottom <= 0) {
-        revealElement(el, 0);
+      if (rect.bottom <= -24) {
+        el.setAttribute("data-reveal-from", "top");
       } else if (rect.top < window.innerHeight) {
+        el.setAttribute("data-reveal-from", "bottom");
         immediate.push(el);
       } else {
-        pendingReveal.push(el);
-        revealObserver.observe(el);
+        el.setAttribute("data-reveal-from", "bottom");
       }
+      observeRevealNode(el);
     });
 
     if (immediate.length) {
       requestAnimationFrame(() => {
         requestAnimationFrame(() => {
-          immediate.forEach((el, idx) => revealElement(el, Math.min(idx, 10) * 60));
+          immediate.forEach((el, idx) => revealElement(el, Math.min(idx, 8) * 85));
         });
       });
     }
   }
 
-  // 4. Conditional recent activity feed (GitHub, LeetCode, LinkedIn within 24h)
+  // 4. Conditional recent activity feed (GitHub commits/events, LeetCode, LinkedIn)
   async function initRecentActivity() {
     const activitySection = document.getElementById("activity");
     const activityList = document.getElementById("activity-list");
-    const windowNote = document.getElementById("activity-window-note");
     if (!activitySection || !activityList) return;
 
-    const DEFAULT_WINDOW_HOURS = 24;
-    const CACHE_TTL_MS = 60 * 1000;
+    const DEFAULT_WINDOW_DAYS = 90;
+    const CACHE_TTL_MS = 5 * 60 * 1000;
     const now = Date.now();
 
     const safeUrl = (raw, fallback) => {
@@ -466,7 +487,12 @@
       const hrs = Math.floor(mins / 60);
       if (hrs < 24) return `${hrs}h ago`;
       const days = Math.floor(hrs / 24);
-      return `${days}d ago`;
+      if (days < 14) return `${days}d ago`;
+      try {
+        return new Intl.DateTimeFormat("en-US", { month: "short", day: "numeric" }).format(new Date(tsMs));
+      } catch {
+        return `${days}d ago`;
+      }
     };
 
     const formatLang = (lang) => {
@@ -491,6 +517,12 @@
         .filter(Boolean)
         .map(w => w.charAt(0).toUpperCase() + w.slice(1))
         .join(" ");
+    };
+
+    const truncateText = (text, maxLen = 78) => {
+      const clean = String(text || "").replace(/\s+/g, " ").trim();
+      if (clean.length <= maxLen) return clean;
+      return `${clean.slice(0, maxLen - 1).trimEnd()}…`;
     };
 
     async function fetchJsonCached(cacheKey, url, timeoutMs = 5500) {
@@ -539,31 +571,83 @@
     }
 
     const config = await fetchLocalUpdatesConfig();
-    const windowHours = (config && Number(config.windowHours) > 0)
-      ? Number(config.windowHours)
-      : DEFAULT_WINDOW_HOURS;
-    const windowMs = windowHours * 60 * 60 * 1000;
-    if (windowNote) {
-      windowNote.textContent = windowHours === 24 ? "Last 24 hours" : `Last ${windowHours} hours`;
-    }
+    const windowDays = (config && Number(config.windowDays) > 0)
+      ? Number(config.windowDays)
+      : DEFAULT_WINDOW_DAYS;
+    const windowMs = windowDays * 24 * 60 * 60 * 1000;
 
     const isRecent = (tsMs) => Number.isFinite(tsMs) && tsMs <= now + 60000 && (now - tsMs) <= windowMs;
 
-    const [lcPrimary, ghEvents] = await Promise.all([
-      fetchJsonCached("sb_lc_v2", "https://leetcode-api-faisalshohag.vercel.app/LFDECO"),
-      fetchJsonCached("sb_gh_v2", "https://api.github.com/users/LFDECO/events/public?per_page=30"),
+    const [lcPrimary, ghEvents, ghRepos] = await Promise.all([
+      fetchJsonCached("sb_lc_v3", "https://leetcode-api-faisalshohag.vercel.app/LFDECO"),
+      fetchJsonCached("sb_gh_v3", "https://api.github.com/users/LFDECO/events/public?per_page=30"),
+      fetchJsonCached("sb_gh_repos_v3", "https://api.github.com/users/LFDECO/repos?sort=pushed&per_page=8"),
     ]);
 
     const items = [];
+    const seenCommitShas = new Set();
 
-    // 1) Recent LeetCode solves (with secondary API + GitHub fallback)
+    // 1) Recent GitHub commits from top recently pushed repositories (excluding LeetCode mirror repo)
+    if (Array.isArray(ghRepos)) {
+      const targetRepos = ghRepos
+        .filter(r => {
+          if (!r || !r.full_name || r.full_name === "LFDECO/Leetcode-solutions") return false;
+          const pushedMs = Date.parse(r.pushed_at || "");
+          return isRecent(pushedMs);
+        })
+        .slice(0, 5);
+
+      const commitResults = await Promise.allSettled(
+        targetRepos.map(repo =>
+          fetchJsonCached(
+            `sb_gh_commits_${repo.name}_v3`,
+            `https://api.github.com/repos/${repo.full_name}/commits?per_page=4`
+          ).then(commits => ({ repo, commits }))
+        )
+      );
+
+      commitResults.forEach(result => {
+        if (result.status !== "fulfilled" || !result.value || !Array.isArray(result.value.commits)) return;
+        const { repo, commits } = result.value;
+        const shortRepo = repo.name || (repo.full_name.startsWith("LFDECO/") ? repo.full_name.slice(7) : repo.full_name);
+        let addedFromRepo = 0;
+
+        commits.forEach(c => {
+          if (!c || !c.sha || seenCommitShas.has(c.sha) || addedFromRepo >= 3) return;
+          const authorLogin = c.author?.login || "";
+          const authorName = c.commit?.author?.name || "";
+          if (authorLogin.endsWith("[bot]") || authorName.includes("[bot]")) return;
+
+          const tsMs = Date.parse(c.commit?.author?.date || c.commit?.committer?.date || "");
+          if (!isRecent(tsMs)) return;
+
+          const rawMsg = (c.commit?.message || "").split("\n")[0].trim();
+          if (!rawMsg) return;
+
+          seenCommitShas.add(c.sha);
+          addedFromRepo++;
+          const shortSha = c.sha.slice(0, 7);
+          const branch = repo.default_branch || "main";
+
+          items.push({
+            source: "GitHub",
+            title: `${shortRepo}: ${truncateText(rawMsg, 72)}`,
+            url: safeUrl(c.html_url, `https://github.com/${repo.full_name}/commit/${c.sha}`),
+            detail: `Commit ${shortSha} · ${branch}`,
+            tsMs,
+          });
+        });
+      });
+    }
+
+    // 2) Recent LeetCode solves (with secondary API + GitHub fallback)
     let lcSubmissions = lcPrimary && Array.isArray(lcPrimary.recentSubmissions)
       ? lcPrimary.recentSubmissions
       : null;
 
     if (!lcSubmissions) {
       const lcBackup = await fetchJsonCached(
-        "sb_lc_alt_v2",
+        "sb_lc_alt_v3",
         "https://alfa-leetcode-api.onrender.com/LFDECO/acSubmission?limit=10"
       );
       if (lcBackup && Array.isArray(lcBackup.submission)) {
@@ -572,12 +656,14 @@
     }
 
     const seenSlugs = new Set();
+    let lcCount = 0;
     if (lcSubmissions) {
       lcSubmissions.forEach(sub => {
-        if ((sub.statusDisplay && sub.statusDisplay !== "Accepted") || !sub.titleSlug || seenSlugs.has(sub.titleSlug)) return;
+        if (lcCount >= 3 || (sub.statusDisplay && sub.statusDisplay !== "Accepted") || !sub.titleSlug || seenSlugs.has(sub.titleSlug)) return;
         const tsMs = Number(sub.timestamp) * 1000;
         if (!isRecent(tsMs)) return;
         seenSlugs.add(sub.titleSlug);
+        lcCount++;
         const langLabel = formatLang(sub.lang);
         items.push({
           source: "LeetCode",
@@ -588,13 +674,13 @@
         });
       });
     } else {
-      // Fallback: check recent commits in LFDECO/Leetcode-solutions
       const lcCommits = await fetchJsonCached(
-        "sb_lc_gh_v2",
+        "sb_lc_gh_v3",
         "https://api.github.com/repos/LFDECO/Leetcode-solutions/commits?per_page=10"
       );
       if (Array.isArray(lcCommits)) {
         lcCommits.forEach(c => {
+          if (lcCount >= 3) return;
           const msg = c?.commit?.message || "";
           const match = msg.match(/(?:Create readme\s*:\s*|Add\s+)(\d+-[a-z0-9-]+)/i);
           if (!match) return;
@@ -603,6 +689,7 @@
           const tsMs = Date.parse(c?.commit?.author?.date || "");
           if (!isRecent(tsMs)) return;
           seenSlugs.add(slug);
+          lcCount++;
           items.push({
             source: "LeetCode",
             title: slugToTitle(slug),
@@ -614,9 +701,9 @@
       }
     }
 
-    // 2) Recent GitHub contributions (excluding automated profile/LeetHub sync repos)
+    // 3) Additional GitHub activity (PRs, issues, releases, repo creation, or pushes not already listed)
     if (Array.isArray(ghEvents)) {
-      const IGNORED_REPOS = new Set(["LFDECO/LFDECO", "LFDECO/Leetcode-solutions"]);
+      const IGNORED_REPOS = new Set(["LFDECO/Leetcode-solutions"]);
       const ALLOWED_EVENTS = new Set([
         "PushEvent",
         "PullRequestEvent",
@@ -637,6 +724,13 @@
         const tsMs = Date.parse(ev.created_at || "");
         if (!isRecent(tsMs)) return;
 
+        if (ev.type === "PushEvent") {
+          const headSha = ev.payload?.head || "";
+          if (headSha && seenCommitShas.has(headSha)) return;
+          const commits = Array.isArray(ev.payload?.commits) ? ev.payload.commits : null;
+          if (commits && commits.some(cm => cm?.sha && seenCommitShas.has(cm.sha))) return;
+        }
+
         const shortRepo = repoName.startsWith("LFDECO/") ? repoName.slice(7) : repoName;
         const repoUrl = `https://github.com/${repoName}`;
         let title = shortRepo;
@@ -645,8 +739,15 @@
 
         if (ev.type === "PushEvent") {
           const branch = (ev.payload?.ref || "").replace(/^refs\/heads\//, "");
-          const commits = Array.isArray(ev.payload?.commits) ? ev.payload.commits : null;
-          if (commits && commits.length > 0) {
+          const commits = Array.isArray(ev.payload?.commits) ? ev.payload.commits : [];
+          const latestMsg = commits.length ? (commits[commits.length - 1]?.message || "").split("\n")[0].trim() : "";
+          if (latestMsg) {
+            title = `${shortRepo}: ${truncateText(latestMsg, 72)}`;
+            const sha = commits[commits.length - 1]?.sha || ev.payload?.head || "";
+            if (sha) {
+              seenCommitShas.add(sha);
+              url = `${repoUrl}/commit/${sha}`;
+            }
             detail = `${commits.length} commit${commits.length === 1 ? "" : "s"}${branch ? ` · ${branch}` : ""}`;
           } else {
             detail = branch ? `Pushed to ${branch}` : "Pushed commits";
@@ -693,7 +794,7 @@
       });
     }
 
-    // 3) Recent LinkedIn updates from assets/updates.json
+    // 4) Recent LinkedIn updates from assets/updates.json
     const linkedinProfile = safeUrl(
       config?.linkedinProfile,
       "https://www.linkedin.com/in/siddhartha-bhaduri-6468142ab/"
@@ -765,7 +866,137 @@
 
   initRecentActivity();
 
-  // 5. Smooth internal anchor scrolling + #scroll-top button
+  // 5. Smooth internal anchor scrolling + animated #scroll-top + hero scrollback replay
+  let activeScrollTween = 0;
+  let hasLeftHero = window.scrollY > 320;
+  let heroPreArmed = false;
+  let lastHeroReplayAt = 0;
+  const scrollTopBtn = document.getElementById("scroll-top");
+
+  function cancelActiveScrollTween() {
+    if (activeScrollTween) {
+      cancelAnimationFrame(activeScrollTween);
+      activeScrollTween = 0;
+    }
+    if (heroTweenLock) {
+      heroTweenLock = false;
+      heroPreArmed = false;
+      getHeroRevealNodes().forEach((el, idx) => {
+        const rect = el.getBoundingClientRect();
+        if (rect.top < window.innerHeight && rect.bottom > 0) {
+          revealElement(el, Math.min(idx, 8) * 60);
+        }
+      });
+    }
+    if (scrollTopBtn) scrollTopBtn.classList.remove("is-launching");
+  }
+
+  ["wheel", "touchstart"].forEach(evt => {
+    window.addEventListener(evt, cancelActiveScrollTween, { passive: true });
+  });
+  window.addEventListener("keydown", e => {
+    if (activeScrollTween && ["ArrowUp", "ArrowDown", "PageUp", "PageDown", "Space", "Home", "End"].includes(e.key)) {
+      cancelActiveScrollTween();
+    }
+  });
+
+  function getHeroRevealNodes() {
+    const heroEl = document.querySelector(".hero");
+    if (!heroEl) return [];
+    const nodes = [...heroEl.querySelectorAll("[data-reveal]")];
+    const heroNameEl = nodes.find(el => el.classList.contains("hero-name"));
+    return heroNameEl
+      ? [heroNameEl, ...nodes.filter(el => el !== heroNameEl)]
+      : nodes;
+  }
+
+  function preArmHeroReplay() {
+    if (!hasReveal || prefersReducedMotion() || heroPreArmed) return;
+    const nodes = getHeroRevealNodes();
+    if (!nodes.length) return;
+    heroPreArmed = true;
+    heroTweenLock = true;
+    nodes.forEach(el => {
+      el.style.setProperty("--reveal-delay", "0ms");
+      el.setAttribute("data-reveal-from", "top");
+      el.classList.remove("is-revealed");
+    });
+  }
+
+  function triggerHeroScrollbackReplay() {
+    const nowTs = performance.now();
+    if (nowTs - lastHeroReplayAt < 450) return;
+    lastHeroReplayAt = nowTs;
+    hasLeftHero = false;
+    heroTweenLock = false;
+
+    if (!hasReveal || prefersReducedMotion()) {
+      heroPreArmed = false;
+      return;
+    }
+
+    const nodes = getHeroRevealNodes();
+    if (!nodes.length) return;
+
+    const wasPreArmed = heroPreArmed;
+    heroPreArmed = false;
+
+    if (wasPreArmed) {
+      void document.body.offsetWidth;
+      requestAnimationFrame(() => {
+        nodes.forEach((el, idx) => {
+          revealElement(el, Math.min(idx, 10) * 90);
+        });
+        document.dispatchEvent(new CustomEvent("hero:arrive"));
+      });
+    } else {
+      nodes.forEach((el, idx) => {
+        if (!el.classList.contains("is-revealed")) {
+          revealElement(el, Math.min(idx, 10) * 90);
+        }
+      });
+      document.dispatchEvent(new CustomEvent("hero:arrive"));
+    }
+  }
+
+  function animateScrollTo(targetY, { onArrive } = {}) {
+    cancelActiveScrollTween();
+    const clampedY = Math.max(0, Math.min(targetY, document.documentElement.scrollHeight - window.innerHeight));
+
+    if (prefersReducedMotion()) {
+      window.scrollTo(0, clampedY);
+      if (typeof onArrive === "function") onArrive();
+      return;
+    }
+
+    const startY = window.scrollY;
+    const deltaY = clampedY - startY;
+    if (Math.abs(deltaY) < 2) {
+      if (typeof onArrive === "function") onArrive();
+      return;
+    }
+
+    const duration = Math.min(1050, Math.max(620, Math.abs(deltaY) * 0.22));
+    const startTime = performance.now();
+
+    const tick = nowTime => {
+      const t = Math.min(1, (nowTime - startTime) / duration);
+      const eased = t < 0.5
+        ? 4 * t * t * t
+        : 1 - Math.pow(-2 * t + 2, 3) / 2;
+      window.scrollTo(0, startY + deltaY * eased);
+
+      if (t < 1) {
+        activeScrollTween = requestAnimationFrame(tick);
+      } else {
+        activeScrollTween = 0;
+        if (typeof onArrive === "function") onArrive();
+      }
+    };
+
+    activeScrollTween = requestAnimationFrame(tick);
+  }
+
   document.addEventListener("click", e => {
     const anchor = e.target.closest('a[href^="#"]');
     if (!anchor || e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) {
@@ -779,11 +1010,18 @@
     e.preventDefault();
     if (menu && menu.open) menu.open = false;
 
-    const behavior = prefersReducedMotion() ? "auto" : "smooth";
     if (href === "#top") {
-      window.scrollTo({ top: 0, behavior });
+      if (window.scrollY > 280) preArmHeroReplay();
+      animateScrollTo(0, {
+        onArrive: () => {
+          if (hasLeftHero || heroPreArmed) triggerHeroScrollbackReplay();
+        },
+      });
     } else {
-      target.scrollIntoView({ behavior, block: "start" });
+      const headerEl = document.querySelector(".site-header");
+      const offset = (headerEl ? headerEl.offsetHeight : 64) + 16;
+      const targetY = Math.max(0, window.scrollY + target.getBoundingClientRect().top - offset);
+      animateScrollTo(targetY);
     }
 
     try {
@@ -805,12 +1043,17 @@
     }
   });
 
-  const scrollTopBtn = document.getElementById("scroll-top");
   if (scrollTopBtn) {
     scrollTopBtn.addEventListener("click", () => {
-      window.scrollTo({
-        top: 0,
-        behavior: prefersReducedMotion() ? "auto" : "smooth",
+      if (!prefersReducedMotion()) {
+        scrollTopBtn.classList.add("is-launching");
+      }
+      if (window.scrollY > 280) preArmHeroReplay();
+      animateScrollTo(0, {
+        onArrive: () => {
+          scrollTopBtn.classList.remove("is-launching");
+          triggerHeroScrollbackReplay();
+        },
       });
     });
   }
@@ -826,12 +1069,27 @@
     }
   }
 
-  // 6. Scroll-top button + Nav Scroll-Spy
+  // 6. Scroll-top button, scroll progress & hero scrollback arrival + Nav Scroll-Spy
+  const rootEl = document.documentElement;
   let scrollRafId = 0;
   function syncOnScroll() {
     scrollRafId = 0;
+    const currentY = window.scrollY;
+    if (currentY !== lastScrollY) {
+      scrollDirection = currentY < lastScrollY ? "up" : "down";
+      lastScrollY = currentY;
+    }
+    const maxScroll = Math.max(0, rootEl.scrollHeight - window.innerHeight);
+    const progress = maxScroll > 0 ? Math.min(1, Math.max(0, currentY / maxScroll)) : 0;
+    rootEl.style.setProperty("--scroll-progress", progress.toFixed(4));
+
+    if (currentY > 360) {
+      hasLeftHero = true;
+    } else if (hasLeftHero && currentY <= 40 && !activeScrollTween) {
+      triggerHeroScrollbackReplay();
+    }
+
     updateScrollTopButton();
-    revealPassedAboveViewport();
   }
   function scheduleScrollSync() {
     if (!scrollRafId) {
@@ -943,7 +1201,7 @@
       const metrics = [...dl.querySelectorAll("dd")].map(parseMetricNode).filter(Boolean);
       if (!metrics.length || prefersReducedMotion()) return;
 
-      const duration = 600;
+      const duration = 900;
       const start = performance.now();
 
       const tick = now => {

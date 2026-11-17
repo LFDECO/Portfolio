@@ -974,12 +974,19 @@ import { THREE, PALETTE, createStage, prefersReducedMotion } from "./three-core.
   // =========================================================================
   // SCROLL-COUPLED SETTLE & ENTRANCE
   // =========================================================================
-  const ENTRANCE_DURATION = 0.5;
+  const ENTRANCE_DURATION = 0.95;
   const SCROLL_Y_SHIFT = -0.15;
   const SCROLL_ROT_SWEEP = 0.35;
   const heroSection = container.closest(".hero") || wrap || container;
   let scrollTarget = 0;
   let scrollCurrent = 0;
+  let entranceStart = 0;
+
+  const onHeroArrive = () => {
+    if (prefersReducedMotion()) return;
+    entranceStart = elapsedTracker;
+  };
+  document.addEventListener("hero:arrive", onHeroArrive);
 
   function readHeroScrollProgress() {
     if (prefersReducedMotion()) {
@@ -1095,13 +1102,13 @@ import { THREE, PALETTE, createStage, prefersReducedMotion } from "./three-core.
     // 3. Harmonic & scroll-coupled motion (skipped on static delta===0 initial frame)
     if (delta > 0) {
       if (!prefersReducedMotion()) {
-        // Initial entrance settle (0.94 -> 1.0 scale over ~500ms)
-        const entranceT = Math.min(1, Math.max(0, elapsed / ENTRANCE_DURATION));
-        const entranceEase = 1 - Math.pow(1 - entranceT, 3);
+        // Initial & scroll-back entrance settle (0.94 -> 1.0 scale over ~950ms)
+        const entranceT = Math.min(1, Math.max(0, (elapsed - entranceStart) / ENTRANCE_DURATION));
+        const entranceEase = 1 - Math.pow(1 - entranceT, 4);
         rootGroup.scale.setScalar(0.94 + 0.06 * entranceEase);
 
         // Purposeful scroll-coupled vertical settle & rotational sweep
-        const sk = 1 - Math.exp(-8.0 * delta);
+        const sk = 1 - Math.exp(-5.0 * delta);
         scrollCurrent += (scrollTarget - scrollCurrent) * sk;
         if (Math.abs(scrollTarget - scrollCurrent) < 0.0005) {
           scrollCurrent = scrollTarget;
@@ -1167,6 +1174,7 @@ import { THREE, PALETTE, createStage, prefersReducedMotion } from "./three-core.
 
     window.removeEventListener("scroll", readHeroScrollProgress);
     window.removeEventListener("resize", readHeroScrollProgress);
+    document.removeEventListener("hero:arrive", onHeroArrive);
     if (motionQuery && typeof motionQuery.removeEventListener === "function") {
       motionQuery.removeEventListener("change", onMotionChange);
     }

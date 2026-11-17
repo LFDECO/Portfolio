@@ -11,7 +11,7 @@
   <meta name="theme-color" content="#0e1013">
   <title>Siddhartha Bhaduri — Software &amp; Machine Learning</title>
   <meta name="description"
-    content="Siddhartha Bhaduri, computer science undergraduate at SRM University and AI research intern at CSIR–CSIO working on software, machine learning, and NDT terahertz computer vision.">
+    content="Siddhartha Bhaduri — software developer and AI research intern at CSIR–CSIO working on machine learning, non-destructive terahertz computer vision, and software systems.">
   <link rel="icon" type="image/svg+xml"
     href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='1' y='1' width='30' height='30' rx='6' fill='%2315181d' stroke='%23ea9264' stroke-opacity='0.6' stroke-width='1.5'/%3E%3Ctext x='16' y='21.5' text-anchor='middle' font-family='monospace' font-size='14' font-weight='500' fill='%23eeece6'%3ESB%3C/text%3E%3C/svg%3E">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -19,7 +19,7 @@
   <link
     href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500&display=swap"
     rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=3">
+  <link rel="stylesheet" href="styles.css?v=8">
 </head>
 
 <body>
@@ -56,7 +56,7 @@
     <!-- Hero -->
     <section class="hero wrap">
       <div class="hero-text">
-        <p class="meta hero-eyebrow" data-reveal>Computer Science Undergraduate · SRM University · Chennai</p>
+        <p class="meta hero-eyebrow" data-reveal>Software &amp; Machine Learning · Chennai</p>
         <div class="hero-identity">
           <h1 class="hero-name" data-reveal><span class="pull-up-mask"><span class="pull-up-line">Siddhartha
                 Bhaduri</span></span></h1>
@@ -110,14 +110,13 @@
       <div class="about-grid">
         <div class="about-narrative">
           <p class="about-lead" data-reveal>
-            I’m a Computer Science student at SRM University in Chennai (9.22 CGPA, graduating
-            2028), focused on computer vision and software engineering.
+            I’m Siddhartha Bhaduri, a software developer and machine learning researcher based in
+            Chennai, focused on computer vision and building reliable software systems.
           </p>
           <p data-reveal>
             I’m currently an AI Research Intern at CSIR–CSIO, using terahertz imaging to spot
-            hidden defects inside 3D-printed parts without damaging them. At university, I’m also
-            writing a paper on adapting standard vision models to work with multi-band satellite
-            photos.
+            hidden defects inside 3D-printed parts without damaging them. I’m also writing a paper
+            on adapting standard vision models to work with multi-band satellite imagery.
           </p>
           <p data-reveal>
             Outside of research, I solve algorithm problems on LeetCode (Knight, 1870 peak rating,
@@ -125,15 +124,15 @@
           </p>
         </div>
 
-        <aside class="about-highlights" aria-label="Key milestones" data-reveal>
+        <aside class="about-highlights" aria-label="Key highlights" data-reveal>
           <dl class="figures figures-compact">
             <div>
-              <dt>Degree</dt>
-              <dd>B.Tech CS · SRM University</dd>
+              <dt>Location</dt>
+              <dd>Chennai, India</dd>
             </div>
             <div>
-              <dt>Academic standing</dt>
-              <dd>9.22 <small>/ 10.0 CGPA</small></dd>
+              <dt>Focus</dt>
+              <dd>Computer Vision &amp; Systems</dd>
             </div>
             <div>
               <dt>Research internship</dt>
@@ -164,7 +163,7 @@
           <p class="focus-desc">
             Adapting standard image models to understand 13-band satellite photos.
           </p>
-          <span class="focus-meta mono">SRM · Research</span>
+          <span class="focus-meta mono">SpectralAdapter · ML</span>
         </div>
         <div class="focus-row" role="listitem" data-reveal>
           <span class="focus-domain">Software systems</span>
@@ -176,11 +175,10 @@
       </div>
     </section>
 
-    <!-- Recent Activity (shown only when updates exist within the last 24 hours) -->
+    <!-- Recent Activity (shown only when recent updates exist) -->
     <section id="activity" class="section section-compact wrap" hidden aria-live="polite">
       <div class="section-head" data-reveal>
         <h2>Recent activity</h2>
-        <p class="section-note mono" id="activity-window-note">Last 24 hours</p>
       </div>
       <ul class="activity-list" id="activity-list"></ul>
     </section>
@@ -198,8 +196,10 @@
           <p class="org">CSIR – Central Scientific Instruments Organisation (CSIO)</p>
         </div>
         <div class="entry-body">
-          <h3>Terahertz imaging for non-destructive evaluation</h3>
-          <p class="role">AI Research Intern – Terahertz (THz) Imaging &amp; Computer Vision</p>
+          <div class="entry-head">
+            <h3>Terahertz imaging for non-destructive evaluation</h3>
+            <p class="role">AI Research Intern – Terahertz (THz) Imaging &amp; Computer Vision</p>
+          </div>
           <p>
             Developing a decoupled multi-stage AI pipeline that finds subsurface defects in FDM
             3D-printed polymers from single-pixel raster THz reflection scans at 350 GHz and 500 GHz,
@@ -266,11 +266,13 @@
       <article class="entry" data-reveal>
         <div class="entry-side">
           <p class="mono date">2026 – present</p>
-          <p class="org">SRM University</p>
+          <p class="org">Independent Research</p>
         </div>
         <div class="entry-body">
-          <h3>SpectralAdapter: parameter-efficient transfer to multispectral imagery</h3>
-          <p class="role">Undergraduate Researcher · IIT conference manuscript in preparation</p>
+          <div class="entry-head">
+            <h3>SpectralAdapter: parameter-efficient transfer to multispectral imagery</h3>
+            <p class="role">ML Researcher · IIT conference manuscript in preparation</p>
+          </div>
           <p>
             Adapts a 99.91% frozen ImageNet ResNet-50 backbone to 13-band Sentinel-2 satellite
             imagery through a 45-parameter 1×1 spectral projection head.
@@ -446,21 +448,6 @@
         </div>
 
         <div class="record-block" data-reveal>
-          <h3>Education</h3>
-          <dl class="figures figures-compact">
-            <div>
-              <dt>CGPA</dt>
-              <dd>9.22 <small>/ 10</small></dd>
-            </div>
-            <div>
-              <dt>Graduation</dt>
-              <dd>2028 <small>expected</small></dd>
-            </div>
-          </dl>
-          <p class="note">B.Tech in Computer Science, SRM University, Chennai</p>
-        </div>
-
-        <div class="record-block" data-reveal>
           <h3>Certifications</h3>
           <ul class="list">
             <li><a class="link" href="https://www.credly.com/badges/df2a37eb-a173-42e3-963b-d245d49508b8/public_url"
@@ -525,7 +512,7 @@
     <span>© 2026 Siddhartha Bhaduri</span>
   </footer>
 
-  <script src="script.js?v=3"></script>
+  <script src="script.js?v=7"></script>
   <script type="module" src="js/scene-hero.js"></script>
   <script type="module" src="js/scene-research.js"></script>
 </body>
